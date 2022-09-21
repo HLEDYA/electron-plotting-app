@@ -13,6 +13,7 @@ const createWindow = () => {
     width: 1280,
     height: 920,
     webPreferences: {
+      nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
     },
   });
@@ -46,10 +47,16 @@ app.on("activate", () => {
   }
 });
 
+/////////////////////////// IPC HANDLE ////////////////////////////////////
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle("say-hello", async (event, args) => {
   console.log("Message from react:", args);
   return "main process: The app version is " + app.getVersion();
+});
+
+ipcMain.handle("read-file", async (event, args) => {
+  console.log("read-file command received");
+  return "Reading file " + args;
 });
