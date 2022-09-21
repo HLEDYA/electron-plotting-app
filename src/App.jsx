@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import TimeSeriesChart from "./components/TimeSeriesChart.jsx";
 
 const clickHandler = async () => {
   const result = await window.myApp.sayHello("I'm React!");
@@ -8,7 +9,8 @@ const clickHandler = async () => {
 
 ReactDOM.render(
   <div>
-    <h1>React App</h1>
+    <h1>Plotting App</h1>
+    <TimeSeriesChart />
     <button onClick={clickHandler}>Click</button>
   </div>,
   document.getElementById("root")
