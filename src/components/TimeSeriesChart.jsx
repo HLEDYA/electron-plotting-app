@@ -101,18 +101,20 @@ const TimeSeriesChart = (props) => {
       points[channel] = [];
     });
 
+    let prevTime = 0;
     for (let i = 0; i < rcvdData.length; i += 1) {
-      if (i > 0) {
-        const time = rcvdData[i][0] * 1000;
-        const x = parseFloat(rcvdData[i][1]);
-        const y = parseFloat(rcvdData[i][1]);
-        const z = parseFloat(rcvdData[i][1]);
-        points["x"].push([time, x]);
-        points["y"].push([time, y]);
-        points["z"].push([time, z]);
-        const rms = Math.sqrt(x * x + y * y);
-        points["rms"].push([time, rms]);
-      }
+      const time = rcvdData[i][0] * 1000;
+      // there are some data for the same time point in the file. Removing them
+      if (time < prevTime) continue;
+      prevTime = time;
+      const x = parseFloat(rcvdData[i][1]);
+      const y = parseFloat(rcvdData[i][1]);
+      const z = parseFloat(rcvdData[i][1]);
+      points["x"].push([time, x]);
+      points["y"].push([time, y]);
+      points["z"].push([time, z]);
+      const rms = Math.sqrt(x * x + y * y);
+      points["rms"].push([time, rms]);
     }
 
     // Make the TimeSeries here from the points collected above
@@ -144,7 +146,7 @@ const TimeSeriesChart = (props) => {
     // take first 250 samples as first range
     const firstRange = new TimeRange([
       points["rms"][0][0],
-      points["rms"][250][0],
+      points["rms"][250 * 60][0],
     ]);
     console.log(firstRange);
 
