@@ -144,9 +144,14 @@ const TimeSeriesChart = (props) => {
     const minDuration = 1 * 1000;
 
     // take first 250 samples as first range
+    const firstRangeEnd = 250 * 60;
     const firstRange = new TimeRange([
       points["rms"][0][0],
-      points["rms"][250 * 60][0],
+      points["rms"][
+        firstRangeEnd < points["rms"].length
+          ? firstRangeEnd
+          : points["rms"].length - 1
+      ][0],
     ]);
     console.log(firstRange);
 
