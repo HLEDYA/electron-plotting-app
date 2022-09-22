@@ -48,12 +48,12 @@ const baselineStyles = {
 };
 
 // d3 formatter to display the speed with one decimal place
-const speedFormat = format(".1f");
+const valueFormat = format(".3f");
 
 const TimeSeriesChart = (props) => {
   console.log("TimeSeriesChart loaded");
 
-  const initialRange = new TimeRange([75 * 60 * 1000, 125 * 60 * 1000]);
+  const initialRange = new TimeRange([0 * 60 * 1000, 25 * 60 * 1000]);
   const { rcvdData } = props;
 
   // Storage for all the data channels
@@ -208,6 +208,7 @@ const TimeSeriesChart = (props) => {
   };
 
   const handleChartResize = (width) => {
+    console.log("handleChartResize:", width);
     setPlotState((prevState) => {
       return { ...prevState, width };
     });
@@ -243,7 +244,7 @@ const TimeSeriesChart = (props) => {
         <Baseline
           key={`baseline-${channelName}`}
           axis={`${channelName}_axis`}
-          style={baselineStyles.speed}
+          style={baselineStyles.x}
           value={channels[channelName].avg}
         />
       );
@@ -258,7 +259,7 @@ const TimeSeriesChart = (props) => {
         const i = series.bisect(new Date(plotState.tracker), ii);
         const v = i < series.size() ? series.at(i).get(channelName) : null;
         if (v) {
-          value = parseFloat(v);
+          value = valueFormat(parseFloat(v));
         }
       }
 
@@ -266,11 +267,11 @@ const TimeSeriesChart = (props) => {
       const summary = [
         {
           label: "Max",
-          value: speedFormat(plotState.channels[channelName].max),
+          value: valueFormat(plotState.channels[channelName].max),
         },
         {
           label: "Min",
-          value: speedFormat(plotState.channels[channelName].min),
+          value: valueFormat(plotState.channels[channelName].min),
         },
       ];
 
@@ -286,7 +287,7 @@ const TimeSeriesChart = (props) => {
             values={summary}
             min={plotState.channels[channelName].min}
             max={plotState.channels[channelName].max}
-            width={160}
+            width={120}
             type="linear"
             format=",.1f"
           />
@@ -305,8 +306,9 @@ const TimeSeriesChart = (props) => {
 
     return (
       <ChartContainer
+        width={1200}
         timeRange={plotState.timerange}
-        format="relative"
+        // format="%b '%y"
         showGrid={false}
         enablePanZoom
         maxTime={plotState.maxTime}
@@ -335,7 +337,7 @@ const TimeSeriesChart = (props) => {
     return (
       <ChartContainer
         timeRange={channels.rms.series.range()}
-        format="relative"
+        // format="relative"
         trackerPosition={plotState.tracker}
       >
         <ChartRow height="100" debug={false}>
@@ -455,7 +457,7 @@ const TimeSeriesChart = (props) => {
       <div className="row">
         <div className="col-md-6">
           <Legend
-            type={plotState.mode === "rollup" ? "swatch" : "line"}
+            type={"line"}
             style={style}
             categories={legend}
             onSelectionChange={handleActiveChange}
@@ -464,7 +466,7 @@ const TimeSeriesChart = (props) => {
 
         <div className="col-md-6">
           {plotState.tracker
-            ? `${moment.duration(+plotState.tracker).format()}`
+            ? `${moment.utc(+plotState.tracker).format()}`
             : "-:--:--"}
         </div>
       </div>

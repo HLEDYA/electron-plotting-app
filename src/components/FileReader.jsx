@@ -27,14 +27,6 @@ const FileReader = (props) => {
         });
 
         // Parsed Data Response in array format
-        //setParsedData(results.data);
-        console.log(results.data);
-
-        // // Show Column Names
-        // setTableRows(rowsArray[0]);
-
-        // // Filtered Values
-        // setValues(valuesArray);
         props.onDataRead(results.data);
       },
     });
@@ -43,37 +35,23 @@ const FileReader = (props) => {
   return (
     <div>
       {/* File Uploader */}
-      <h4>File Uploader</h4>
+      <h4
+        style={{
+          display: "block",
+          paddingBottom: "1rem",
+          width: "10rem",
+          margin: "auto",
+        }}
+      >
+        File Uploader
+      </h4>
       <input
         type="file"
         name="file"
         onChange={changeHandler}
         accept=".csv"
-        style={{ display: "block", margin: "10px auto" }}
+        style={{ display: "block", margin: "auto" }}
       />
-      <br />
-      <br />
-      {/* Table */}
-      <table>
-        <thead>
-          <tr>
-            {tableRows.map((rows, index) => {
-              return <th key={index}>{rows}</th>;
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {values.map((value, index) => {
-            return (
-              <tr key={index}>
-                {value.map((val, i) => {
-                  return <td key={i}>{val}</td>;
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
     </div>
   );
 };
